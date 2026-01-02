@@ -1,25 +1,37 @@
 import azure.functions as func
-import logging
+import requests
+import re
+import json
+from bs4 import BeautifulSoup
 
-app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
+def main(req: func.HttpRequest) -> func.HttpResponse:
+    # 1. Get Parameters from ADF (the caller)
+    req_body = req.get_json()
+    target_url = req_body.get('target_url')      # e.g., https://s3.amazonaws.com/hubway-data/
+    regex_pattern = req_body.get('pattern')      # e.g., \d{6}-hubway-tripdata\.zip
+    user_email = req_body.get('email')           # For logging/metadata
 
-@app.route(route="http_trigger_bike_data")
-def http_trigger_bike_data(req: func.HttpRequest) -> func.HttpResponse:
-    logging.info('Python HTTP trigger function processed a request.')
+    if not target_url or not regex_pattern:
+        return func.HttpResponse("Missing URL or Pattern", status_code=400)
 
-    name = req.params.get('name')
-    if not name:
-        try:
-            req_body = req.get_json()
-        except ValueError:
-            pass
-        else:
-            name = req_body.get('name')
+    try:
+        # 2. Scrape the page
+        response = requests.get(target_url)
+        soup = BeautifulSoup(response.text, 'html.parser')
+        
+        # 3. Apply Regex Pattern
+        all_links = [a['href'] for a in soup.find_all('a', href=True)]
+        matched_files = [f for f in all_links if re.search(regex_pattern, f)]
 
-    if name:
-        return func.HttpResponse(f"Hello, {name}. This HTTP triggered function executed successfully.")
-    else:
+        # 4. Return JSON list to ADF
         return func.HttpResponse(
-             "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
-             status_code=200
+            body=json.dumps({
+                "file_list": matched_files,
+                "count": len(matched_files),
+                "processed_by": user_email
+            }),
+            mimetype="application/json",
+            status_code=200
         )
+    except Exception as e:
+        return func.HttpResponse(f"Error: {str(e)}", status_code=500)
