@@ -7,12 +7,10 @@ from selenium.webdriver.support import expected_conditions as EC
 from azure.storage.blob import BlobServiceClient
 
 # --- Azure Configuration ---
-# DO NOT share this string publicly! 
-AZURE_CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=bikeflowproject;AccountKey=V4RtenvAnFenZESXogjj/tlyIF4tz9H2jaF2dyA6kpLS1jgat4DBqZGu60agoDLE2ygfJ2a0jwDA+AStOqIRjg==;EndpointSuffix=core.windows.net"
+AZURE_CONNECTION_STRING = ""
 CONTAINER_NAME = "bikes-raw-data/bluebikes-zipfiles"
 
 def run_upload():
-    # Initialize Azure Blob Client
     blob_service_client = BlobServiceClient.from_connection_string(AZURE_CONNECTION_STRING)
     container_client = blob_service_client.get_container_client(CONTAINER_NAME)
 
@@ -34,11 +32,10 @@ def run_upload():
             url = link.get_attribute("href")
             file_name = link.text
             
-            if not file_name: continue # Skip if text is empty
+            if not file_name: continue 
 
             print(f"Uploading {file_name}...")
             
-            # Stream directly to Azure
             response = requests.get(url, stream=True)
             if response.status_code == 200:
                 blob_client = container_client.get_blob_client(file_name)
