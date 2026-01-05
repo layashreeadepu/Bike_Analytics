@@ -9,7 +9,7 @@ from azure.storage.blob import BlobServiceClient
 # --- Azure Configuration ---
 # DO NOT share this string publicly! 
 AZURE_CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=bikeflowproject;AccountKey=V4RtenvAnFenZESXogjj/tlyIF4tz9H2jaF2dyA6kpLS1jgat4DBqZGu60agoDLE2ygfJ2a0jwDA+AStOqIRjg==;EndpointSuffix=core.windows.net"
-CONTAINER_NAME = "bikes-raw-data"
+CONTAINER_NAME = "bikes-raw-data/bluebikes-zipfiles"
 
 def run_upload():
     # Initialize Azure Blob Client
