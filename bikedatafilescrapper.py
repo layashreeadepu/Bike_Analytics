@@ -7,7 +7,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from azure.storage.blob import BlobServiceClient
 
 # --- Azure Configuration ---
-AZURE_CONNECTION_STRING = ""
+AZURE_CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=bikeflowproject;AccountKey=DuQuPGD9eyNGb9yOhylBdkR2TjVOfbhr7oSCWja1vJiLoJ+cZhZId1haQrvX98hTxTmr083rYdU6+AStLgh0JQ==;EndpointSuffix=core.windows.net"
 CONTAINER_NAME = "bikes-raw-data/bluebikes-zipfiles"
 
 def run_upload():
