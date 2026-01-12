@@ -7,7 +7,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from azure.storage.blob import BlobServiceClient
 
 # --- Azure Configuration ---
-AZURE_CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=bikeflowproject;AccountKey=DuQuPGD9eyNGb9yOhylBdkR2TjVOfbhr7oSCWja1vJiLoJ+cZhZId1haQrvX98hTxTmr083rYdU6+AStLgh0JQ==;EndpointSuffix=core.windows.net"
+AZURE_CONNECTION_STRING = ""
 CONTAINER_NAME = "bikes-raw-data/bluebikes-zipfiles"
 
 def run_upload():
@@ -23,8 +23,8 @@ def run_upload():
         wait = WebDriverWait(driver, 15)
         
         # Wait for links to appear
-        wait.until(EC.presence_of_element_located((By.XPATH, '//a[contains(@href, ".zip")]')))
-        zip_links = driver.find_elements(By.XPATH, '//a[contains(@href, ".zip")]')
+        wait.until(EC.presence_of_element_located((By.XPATH, '//a[contains(@href, "bluebikes-tripdata.zip")]')))
+        zip_links = driver.find_elements(By.XPATH, '//a[contains(@href, "bluebikes-tripdata.zip")]')
         
         print(f"Total files found: {len(zip_links)}")
 
@@ -36,13 +36,32 @@ def run_upload():
 
             print(f"Uploading {file_name}...")
             
-            response = requests.get(url, stream=True)
-            if response.status_code == 200:
-                blob_client = container_client.get_blob_client(file_name)
-                # Use upload_blob with the raw stream
-                blob_client.upload_blob(response.raw, overwrite=True)
-            else:
-                print(f"Failed to download {file_name}")
+            # Use a context manager to ensure the connection closes properly
+            with requests.get(url, stream=True) as response:
+                if response.status_code == 200:
+                    blob_client = container_client.get_blob_client(file_name)
+                    
+                    # SOLUTION: Upload the content directly from the iterator
+                    # This handles network chunks correctly and prevents corruption
+                    blob_client.upload_blob(response.content, overwrite=True)
+                else:
+                    print(f"Failed: HTTP {response.status_code} for {file_name}")
+
+        # for link in zip_links:
+        #     url = link.get_attribute("href")
+        #     file_name = link.text
+            
+        #     if not file_name: continue 
+
+        #     print(f"Uploading {file_name}...")
+            
+        #     response = requests.get(url, stream=True)
+        #     if response.status_code == 200:
+        #         blob_client = container_client.get_blob_client(file_name)
+        #         # Use upload_blob with the raw stream
+        #         blob_client.upload_blob(response.raw, overwrite=True)
+        #     else:
+        #         print(f"Failed to download {file_name}")
                     
         print("--- All uploads to Azure complete! ---")
 

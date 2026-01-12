@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bikeshare-pricing>
+  <plan type="single-ride">
+    <name>Single Ride</name>
+    <base-price>
+      <amount currency="USD">2.95</amount>
+      <duration unit="minutes">30</duration>
+    </base-price>
+    <bike-unlock>
+      <amount currency="USD">2.95</amount>
+    </bike-unlock>
+    <classic-bike-ride-time unit="minutes">30</classic-bike-ride-time>
+    <ebike-price>
+      <amount currency="USD">0.25</amount>
+      <unit>per minute</unit>
+    </ebike-price>
+  </plan>
+
+  <plan type="day-pass">
+    <name>Day Pass</name>
+    <base-price>
+      <amount currency="USD">10</amount>
+      <duration unit="day">1</duration>
+    </base-price>
+    <bike-unlock>
+      <amount currency="USD">0</amount>
+    </bike-unlock>
+    <classic-bike-ride-time unit="minutes">120</classic-bike-ride-time>
+    <ebike-price>
+      <amount currency="USD">0.25</amount>
+      <unit>per minute</unit>
+    </ebike-price>
+  </plan>
+
+  <plan type="monthly">
+    <name>Monthly</name>
+    <base-price>
+      <amount currency="USD">30.50</amount>
+      <duration unit="month">1</duration>
+    </base-price>
+    <bike-unlock>
+      <amount currency="USD">0</amount>
+    </bike-unlock>
+    <classic-bike-ride-time unit="minutes">45</classic-bike-ride-time>
+    <ebike-price>
+      <amount currency="USD">0.10</amount>
+      <unit>per minute</unit>
+    </ebike-price>
+  </plan>
+
+  <plan type="annual">
+    <name>Annual</name>
+    <base-price>
+      <signup-fee currency="USD">133.50</signup-fee>
+      <alternative>
+        <amount currency="USD">13</amount>
+        <duration unit="month">1</duration>
+      </alternative>
+    </base-price>
+    <bike-unlock>
+      <amount currency="USD">0</amount>
+    </bike-unlock>
+    <classic-bike-ride-time unit="minutes">45</classic-bike-ride-time>
+    <ebike-price>
+      <amount currency="USD">0.10</amount>
+      <unit>per minute</unit>
+    </ebike-price>
+  </plan>
+
+  <plan type="income-eligible">
+    <name>Income Eligible</name>
+    <base-price>
+      <eligibility>Based on residence</eligibility>
+    </base-price>
+    <bike-unlock>
+      <amount currency="USD">0</amount>
+    </bike-unlock>
+    <classic-bike-ride-time unit="minutes">60</classic-bike-ride-time>
+    <ebike-price>
+      <amount currency="USD">0.07</amount>
+      <unit>per minute</unit>
+    </ebike-price>
+  </plan>
+</bikeshare-pricing>

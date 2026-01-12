@@ -9,7 +9,6 @@ app = func.FunctionApp()
 
 # Configuration
 CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=bikeflowproject;AccountKey=DuQuPGD9eyNGb9yOhylBdkR2TjVOfbhr7oSCWja1vJiLoJ+cZhZId1haQrvX98hTxTmr083rYdU6+AStLgh0JQ==;EndpointSuffix=core.windows.net"
-
 DEST_CONTAINER = "bikes-raw-data/bluebikes-upziped-files"
 
 @app.blob_trigger(arg_name="myblob", path="bikes-raw-data/bluebikes-zipfiles/{name}.zip",
